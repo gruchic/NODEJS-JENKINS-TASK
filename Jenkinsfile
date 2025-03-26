@@ -5,7 +5,7 @@ pipeline {
         APP_DIR = '/home/ubuntu/my-node-app'
         BACKUP_DIR = '/home/ubuntu/my-node-app-backup'
         STAGING_SERVER = "${env.STAGING_IP}"
-        SSH_CREDS = credentials("${env.SSH_CREDENTIALS_ID}")
+        SSH_CREDS = 'staging-ssh-credentials'
     }
     stages {
         stage('Checkout') {
