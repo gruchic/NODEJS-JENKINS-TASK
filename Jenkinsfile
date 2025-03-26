@@ -28,44 +28,19 @@ pipeline {
                 sh 'echo Building the app...' // Add build steps if needed
             }
         }
-    //     stage('Deploy to Staging') {
-    //         steps {
-    //             script {
-    //                 // SSH into EC2 and deploy
-    //                 sshagent([env.SSH_CREDS]) {
-    //                     // Backup existing app
-    //                     sh """
-    //                     ssh -o StrictHostKeyChecking=no ubuntu@${STAGING_SERVER} '
-    //                         if [ -d ${APP_DIR} ]; then
-    //                             rm -rf ${BACKUP_DIR} || true;
-    //                             mv ${APP_DIR} ${BACKUP_DIR};
-    //                         fi;
-    //                         mkdir -p ${APP_DIR}'
-    //                     """
-    //                     // Copy files to EC2
-    //                     sh "scp -r ./* ubuntu@${STAGING_SERVER}:${APP_DIR}"
-    //                     // Install dependencies and start app
-    //                     sh """
-    //                     ssh -o StrictHostKeyChecking=no ubuntu@${STAGING_SERVER} '
-    //                         cd ${APP_DIR} &&
-    //                         npm install &&
-    //                         pm2 stop my-node-app || true &&
-    //                         pm2 start src/app.js --name my-node-app'
-    //                     """
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
-    stage('Deploy to Staging') {
-    steps {
-        script {
-            sshagent([env.SSH_CREDS]) {
-                sh "ssh -o StrictHostKeyChecking=no ubuntu@${STAGING_SERVER} 'echo SSH works!'"
+        stage('Deploy to Staging') {
+            steps {
+                script {
+                    // SSH into EC2 and deploy
+                    sshagent([env.SSH_CREDS]) {
+                        // Backup existing app
+                        sh "ssh -o StrictHostKeyChecking=no ubuntu@${STAGING_SERVER} 'echo SSH works!'"
+                    }
+                }
             }
         }
     }
-}
+   
     post {
         success {
             mail to: "${env.EMAIL_RECIPIENT}",
