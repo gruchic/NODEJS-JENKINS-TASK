@@ -65,6 +65,7 @@ pipeline {
         failure {
             script {
              
+               // Roll Back on the failure of the Pipeline #################################################
                 sshagent([env.SSH_CREDS]) {
                     sh """
                     ssh -o StrictHostKeyChecking=no ubuntu@${STAGING_SERVER} '
