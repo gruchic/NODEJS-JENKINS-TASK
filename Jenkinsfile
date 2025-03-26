@@ -34,7 +34,22 @@ pipeline {
                     // SSH into EC2 and deploy
                     sshagent([env.SSH_CREDS]) {
                         // Backup existing app
-                        sh "ssh -o StrictHostKeyChecking=no ubuntu@${STAGING_SERVER} 'echo SSH works!'"
+                       sh """
+                ssh -o StrictHostKeyChecking=no ubuntu@${STAGING_SERVER} '
+                    if [ -d ${APP_DIR} ]; then
+                        rm -rf ${BACKUP_DIR} || true;
+                        mv ${APP_DIR} ${BACKUP_DIR};
+                    fi;
+                    mkdir -p ${APP_DIR}'
+                """
+                sh "scp -o StrictHostKeyChecking=no -v -r ./* ubuntu@${STAGING_SERVER}:${APP_DIR}"
+                sh """
+                ssh -o StrictHostKeyChecking=no ubuntu@${STAGING_SERVER} '
+                    cd ${APP_DIR} &&
+                    npm install &&
+                    pm2 stop my-node-app || true &&
+                    pm2 start src/app.js --name my-node-app'
+                """
                     }
                 }
             }
