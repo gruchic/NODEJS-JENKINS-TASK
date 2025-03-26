@@ -42,7 +42,7 @@ pipeline {
                     fi;
                     mkdir -p ${APP_DIR}'
                 """
-                sh "scp -o StrictHostKeyChecking=no -v -r ./* ubuntu@${STAGING_SERVER}:${APP_DIR}"
+                sh "scp -i ${SSH_CREDS} -o StrictHostKeyChecking=no -v -r ./* ubuntu@${STAGING_SERVER}:${APP_DIR}"
                 sh """
                 ssh -o StrictHostKeyChecking=no ubuntu@${STAGING_SERVER} '
                     cd ${APP_DIR} &&
