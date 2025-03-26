@@ -1,6 +1,6 @@
 pipeline {
     agent any
-    tools { nodejs 'Node16' } // Use Node.js version configured in Jenkins
+    tools { nodejs 'Node16' } 
     environment {
         APP_DIR = '/home/ubuntu/my-node-app'
         BACKUP_DIR = '/home/ubuntu/my-node-app-backup'
@@ -25,15 +25,15 @@ pipeline {
         }
         stage('Build') {
             steps {
-                sh 'echo Building the app...' // Add build steps if needed
+                sh 'echo Building the app...' 
             }
         }
         stage('Deploy to Staging') {
             steps {
                 script {
-                    // SSH into EC2 and deploy
+                    
                     sshagent([env.SSH_CREDS]) {
-                        // Backup existing app
+                     
                       sh """
                 ssh -o StrictHostKeyChecking=no ubuntu@${STAGING_SERVER} '
                     if [ -d ${APP_DIR} ]; then
@@ -64,7 +64,7 @@ pipeline {
         }
         failure {
             script {
-                // Rollback on failure
+             
                 sshagent([env.SSH_CREDS]) {
                     sh """
                     ssh -o StrictHostKeyChecking=no ubuntu@${STAGING_SERVER} '
