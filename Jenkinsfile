@@ -34,7 +34,7 @@ pipeline {
                     // SSH into EC2 and deploy
                     sshagent([env.SSH_CREDS]) {
                         // Backup existing app
-                       sh """
+                      sh """
                 ssh -o StrictHostKeyChecking=no ubuntu@${STAGING_SERVER} '
                     if [ -d ${APP_DIR} ]; then
                         rm -rf ${BACKUP_DIR} || true;
@@ -42,7 +42,7 @@ pipeline {
                     fi;
                     mkdir -p ${APP_DIR}'
                 """
-                sh "scp -o StrictHostKeyChecking=no -r . ubuntu@${STAGING_SERVER}:${APP_DIR}"
+                sh "rsync -avz --progress -e 'ssh -o StrictHostKeyChecking=no' . ubuntu@${STAGING_SERVER}:${APP_DIR}"
                 sh """
                 ssh -o StrictHostKeyChecking=no ubuntu@${STAGING_SERVER} '
                     cd ${APP_DIR} &&
