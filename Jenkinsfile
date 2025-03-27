@@ -18,9 +18,14 @@ pipeline {
                 sh 'npm install'
             }
         }
-        stage('Run Tests') {
+        stage('Run Unit Tests') {
             steps {
-                sh 'npm test'
+                sh 'npm test -- tests/unit.test.js' // Runs only unit tests
+            }
+        }
+        stage('Run Integration Tests') {
+            steps {
+                sh 'npm test -- tests/integration.test.js' // Runs only integration tests
             }
         }
         stage('Build') {
